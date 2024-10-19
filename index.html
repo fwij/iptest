@@ -50,7 +50,7 @@
         async function fetchWeather(lat, lon) {
             try {
                 // Fetch weather data using OpenWeather API
-                const weatherResponse = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=e5b292ae2f9dae5f29e11499c2d82ece&units=metric`);
+                const weatherResponse = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=e5b292ae2f9dae5f29e11499c2d82ece&units=imperial`);
                 const weatherData = await weatherResponse.json();
                 
                 // Check if the response contains weather data
