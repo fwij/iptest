@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IP Address, Location, and Weather</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        #info {
+            font-size: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Your IP Address, Location, and Weather</h1>
+    <div id="info">Loading...</div>
+
+    <script>
+        async function fetchIPAndLocation() {
+            try {
+                // Fetch IP information from ipinfo.io
+                const ipResponse = await fetch('https://ipinfo.io/json?token=0bff134863f7d3');
+                const ipData = await ipResponse.json();
+                const { ip, city, region, country, loc } = ipData; // loc contains lat,lon
+
+
+
+                // Split the loc string to get latitude and longitude
+                const [latitude, longitude] = loc.split(',');
+
+                // Fetch weather information
+                fetchWeather(latitude, longitude);
+            } catch (error) {
+                document.getElementById('info').textContent = 'Unable to retrieve information';
+            }
+        }
+
+        async function fetchWeather(lat, lon) {
+            try {
+                // Fetch weather data using OpenWeather API
+                const weatherResponse = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=e5b292ae2f9dae5f29e11499c2d82ece&units=imperial`);
+                const weatherData = await weatherResponse.json();
+                
+                // Check if the response contains weather data
+                if (weatherData.cod === 200) {
+                    const { temp } = weatherData.main;
+                    const description = weatherData.weather[0].description;
+
+                    // Display weather information
+                    document.getElementById('info').innerHTML += `
+                        <p><strong>Temperature:</strong>${description}, ${temp}°F</p>
+                       `;
+                } else {
+                    document.getElementById('info').innerHTML += '<p>Weather data not available</p>';
+                }
+            } catch (error) {
+                document.getElementById('info').innerHTML += '<p>Unable to retrieve weather information</p>';
+            }
+        }
+
+        fetchIPAndLocation();
+    </script>
+</body>
+</html>
