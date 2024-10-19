@@ -18,7 +18,7 @@
 </head>
 <body>
     <h1>Your IP Address, Location, and Weather</h1>
-    <div id="info">Loading...</div>
+    <div id="info"></div>
 
     <script>
         async function fetchIPAndLocation() {
@@ -53,7 +53,7 @@
 
                     // Display weather information
                     document.getElementById('info').innerHTML += `
-                        <p><strong>Temperature:</strong>${description}, ${temp}°F</p>
+                        <p><strong></strong>${description}, ${temp}°F</p>
                        `;
                 } else {
                     document.getElementById('info').innerHTML += '<p>Weather data not available</p>';
