@@ -23,11 +23,12 @@
     <script>
         async function fetchIPAndLocation() {
             try {
+                // Fetch IP information from ipinfo.io
                 const ipResponse = await fetch('https://ipinfo.io/json?token=0bff134863f7d3');
                 const ipData = await ipResponse.json();
-                const { ip, city, region, country, loc } = ipData;
-                const [latitude, longitude] = loc.split(',');
+                const { ip, city, region, country, loc } = ipData; // loc contains lat,lon
 
+                // Display IP and location information
                 document.getElementById('info').innerHTML = `
                     <p><strong>IP:</strong> ${ip}</p>
                     <p><strong>City:</strong> ${city}</p>
@@ -35,6 +36,9 @@
                     <p><strong>Country:</strong> ${country}</p>
                     <p><strong>Location:</strong> ${loc}</p>
                 `;
+
+                // Split the loc string to get latitude and longitude
+                const [latitude, longitude] = loc.split(',');
 
                 // Fetch weather information
                 fetchWeather(latitude, longitude);
@@ -45,15 +49,23 @@
 
         async function fetchWeather(lat, lon) {
             try {
+                // Fetch weather data using OpenWeather API
                 const weatherResponse = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=e5b292ae2f9dae5f29e11499c2d82ece&units=metric`);
                 const weatherData = await weatherResponse.json();
-                const { temp, weather } = weatherData.main;
-                const description = weather[0].description;
+                
+                // Check if the response contains weather data
+                if (weatherData.cod === 200) {
+                    const { temp } = weatherData.main;
+                    const description = weatherData.weather[0].description;
 
-                document.getElementById('info').innerHTML += `
-                    <p><strong>Temperature:</strong> ${temp}°C</p>
-                    <p><strong>Weather:</strong> ${description}</p>
-                `;
+                    // Display weather information
+                    document.getElementById('info').innerHTML += `
+                        <p><strong>Temperature:</strong> ${temp}°C</p>
+                        <p><strong>Weather:</strong> ${description}</p>
+                    `;
+                } else {
+                    document.getElementById('info').innerHTML += '<p>Weather data not available</p>';
+                }
             } catch (error) {
                 document.getElementById('info').innerHTML += '<p>Unable to retrieve weather information</p>';
             }
